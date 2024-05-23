@@ -1,0 +1,38 @@
+.ui-hide {
+  display: none !important;
+}
+
+.ui-faded-out {
+  display: none !important;
+  animation: ui-faded-out-keyframes .3s ease-in-out;
+}
+
+@keyframes ui-faded-out-keyframes {
+  0% {
+      opacity: 1;
+  }
+  95% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 0;
+      display: none;
+  }
+}
+
+.ui-faded-in {
+  animation: ui-faded-in-keyframes .3s ease-in-out;
+}
+
+@keyframes ui-faded-in-keyframes {
+  0% {
+      opacity: 0;
+      display: none;
+  }
+  5% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}

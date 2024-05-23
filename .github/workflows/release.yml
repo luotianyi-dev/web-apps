@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags: '*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: Ensure Version Consistency
+        id:   version
+        run: |
+          pkg_version=$(node -p "require('./package.json').version")
+          git_version=$(git describe --tags --abbrev=0)
+          echo "version: pkg=$pkg_version, git=$git_version"
+          if [ "$pkg_version" != "$git_version" ]; then
+            echo "Error: version mismatch"
+            exit 1
+          fi
+          echo "version=$pkg_version" >> $GITHUB_OUTPUT
+      - name: Build
+        run:  npm install && NODE_ENV=production npm run build -- --base /apps
+      - name: Release
+        run: |
+          cp -rv dist                 $DIST
+          cp -rv $DIST                $DIST-html
+          mv     $DIST-html/assets    $DIST-assets
+          cp -rv $DIST                $DIST-precompressed
+          cp -rv $DIST                $DIST-brortli
+          cp -rv $DIST                $DIST-gzip
+          cp -rv $DIST-html           $DIST-html-precompressed
+          cp -rv $DIST-html           $DIST-html-brortli
+          cp -rv $DIST-html           $DIST-html-gzip
+          find   $DIST*precompressed -type f -name "*.html" -exec brotli -9 -k {} \;
+          find   $DIST*precompressed -type f -name "*.html" -exec gzip   -9 -k {} \;
+          find   $DIST*brortli       -type f -name "*.html" -exec brotli -9 -k {} \;
+          find   $DIST*brortli       -type f -name "*.html" -exec gzip   -9 -k {} \;
+          for folder in $DIST*; do
+            tar  -cvf $folder.tar $folder
+            zstd -19  $folder.tar
+            gzip -9   $folder.tar
+          done
+          gh release create $VERSION $DIST*.tar.*
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          DIST: web-apps-${{ steps.version.outputs.version }}-dist

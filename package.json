@@ -1,0 +1,30 @@
+{
+  "name": "web-apps",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MPL-2.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite-ssg build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@luotianyi-dev/whitestone-stream-ui": "git+https://github.com/luotianyi-dev/whitestone-stream-ui",
+    "axios": "^1.7.2",
+    "boxicons": "^2.1.4",
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "@unhead/vue": "^1.9.10",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "editorconfig": "^2.0.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vite-plugin-minify": "^1.5.2",
+    "vite-ssg": "^0.23.7",
+    "vue-router": "^4.3.2",
+    "vue-tsc": "^2.0.6"
+  }
+}
