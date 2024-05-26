@@ -33,7 +33,7 @@ jobs:
         run: |
           S3_ENDPOINT="https://$S3_DOMAIN"
           S3_DESTPATH="$S3_PREFIX/$PROJECT/${{ github.sha }}"
-          S3_BASE_URL="$S3_ENDPOINT/$S3_BUCKET/$S3_DESTPATH"
+          S3_BASE_URL="https://$S3_BUCKET.$S3_DOMAIN/$S3_DESTPATH"
           echo "S3_ENDPOINT=$S3_ENDPOINT" | tee -a $GITHUB_ENV
           echo "S3_DESTPATH=$S3_DESTPATH" | tee -a $GITHUB_ENV
           echo "S3_BASE_URL=$S3_BASE_URL" | tee -a $GITHUB_ENV
